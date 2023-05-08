@@ -54,16 +54,6 @@ HUOM! Voidaan yliajaa ympäristömuuttujalla. kts. Makefile
 
 mene selaimella http://localhost:8103
 
-## palvelimella ajo (Minerva2)
-lokaalisti ensin build:
-
-    make build
-    make push
-
-palvelimella:
-
-    make pull
-    make start
 
 ## config
  Config.json tiedoston *users* -kentässä määritellään sallitut käyttäjät. Käyttäjän lisäämisen jälkeen pitää kutsua config/reload enpointtia, jotta muutokset tulevat voimaan.

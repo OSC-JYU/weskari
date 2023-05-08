@@ -14,22 +14,18 @@ create_volume:
 build:
 	docker build -t osc.repo.kopla.jyu.fi/arihayri/weskari:$(VERSION) .
 
-push:
-	docker push osc.repo.kopla.jyu.fi/arihayri/weskari:$(VERSION)
 
-pull:
-	docker pull osc.repo.kopla.jyu.fi/arihayri/weskari:$(VERSION)
 
 start:
 	docker run -d --name weskari-api \
 		-v $(VOLUME):/logs \
-		-p 8103:8080 \
+		-p 8080:8080 \
 		-e PORT=8080 \
 		-e DB=remote \
 		-e DB_NAME="weskari" \
 		-e DB_USER="weskari_user" \
 		-e DB_PASSWORD="" \
-		-e DB_URL="oscdb.cc.jyu.fi" \
+		-e DB_URL="" \
 		-e MS_CLIENT_ID="" \
 		-e MS_CLIENT_SECRET="" \
 		--network weskari-net \
