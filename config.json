@@ -1,0 +1,9 @@
+{
+	"users": [
+		"ari.hayrinen@jyu.fi"
+	],
+	"db": "local",
+	"mailer": "ms-graph"
+}
+
+
