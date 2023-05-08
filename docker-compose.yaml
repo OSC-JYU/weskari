@@ -1,0 +1,39 @@
+
+
+version: '3'
+
+services:
+  mongo:
+    image: mongo:6
+    container_name: mongo_weskari
+    networks:
+     - weskari-net
+    ports:
+      - 27017:27017
+    volumes:
+     - mongodata:/data/db
+
+  weskari:
+    build: .
+    depends_on:
+     - mongo
+    image: osc-jyu/weskari
+    container_name: weskari_comp
+    networks:
+     - weskari-net
+    ports:
+     - "8080:8080"
+    environment:
+     - DB=docker
+     - DB_URL=mongo_weskari
+     - DB_NAME=weskari
+     - PORT=8080
+     - DEBUG=debug
+     - DEV=1
+
+networks:
+  weskari-net:
+    driver: bridge
+
+volumes:
+  mongodata:
