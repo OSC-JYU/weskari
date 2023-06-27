@@ -106,7 +106,7 @@ const organisationSchema = new mongoose.Schema(
 const librarySchema = new mongoose.Schema(
 	{
 		nimi: { type: String, required: true, index: true },
-		lyhenne: String,
+		lyhenne: {type: String, default: '-'},
 		osoite: String,
 		email: String,
 		huomio: String,
@@ -588,10 +588,15 @@ router.get('/api/kirjastot/:id/loans', async function (ctx) {
 		"tilaus_saatu.info": 1
 	}
 	console.log(ctx.params.id)
+	var status = 'lainassa'
+	if(ctx.request.query.status) {
+		if(['arkistoitu'].includes(ctx.request.query.status))
+			status = ctx.request.query.status
+	}
 	var resp = await LoanRequest.find({
 		$and: [
 			{"tilaus_saatu.kirjasto_id": ctx.params.id},
-			{"status": "lainassa"}
+			{"status": status}
 		 ]
 	 }, fields).sort({"tilaus_saatu.pvm_erapaiva":-1}).populate('tilaaja').exec();
 	ctx.body = resp

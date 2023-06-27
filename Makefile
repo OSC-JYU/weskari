@@ -1,7 +1,7 @@
 IMAGES := $(shell docker images -f "dangling=true" -q)
 CONTAINERS := $(shell docker ps -a -q -f status=exited)
 VOLUME := weskari-data
-VERSION := 1.2beta
+VERSION := 1.2beta3
 
 
 clean:
