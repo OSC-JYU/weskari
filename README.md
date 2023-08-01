@@ -10,8 +10,8 @@ Avoimen tiedon keskus ei tarjoa käyttäjätukea, vaan ohjelmisto on käytettäv
 
 ## Quick start kokeilemiseen
 
-    git clone https://gitlab.kopla.jyu.fi/osc/weskari.git
-    cd Weskari
+    git clone https://github.com/OSC-JYU/weskari.git
+    cd weskari
     docker-compose up
 
 Weskarin wirkailijakäyttölliittymä löytyy osoitteesta http://localhost:8080
@@ -47,10 +47,14 @@ HUOM! Voidaan yliajaa ympäristömuuttujalla. kts. Makefile
 		"db_url": "127.0.0.1"
 	}
 
-    git clone https://gitlab.kopla.jyu.fi/osc/weskari.git
+
+
+
+    git clone https://github.com/OSC-JYU/weskari.git
     cd weskari
     npm install
     DEBUG=debug DEV=1 nodemon index.js
+
 
 mene selaimella http://localhost:8103
 
