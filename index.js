@@ -885,16 +885,18 @@ async function loadConfig() {
 
 	var options = {}
 	var uri = ''
+	var db_name = 'weskari'
 
 	if(process.env.DB) config.db = process.env.DB;
+	if(process.env.DB_NAME) db_name = process.env.DB_NAME;
 	var connection_string = ''
 	if(config.db === 'local') {
-		uri = 'mongodb://127.0.0.1:27017/weskari';
+		uri = `mongodb://127.0.0.1:27017/${db_name}`;
 		options = {
 			useNewUrlParser: true
 		}
 	} else if(config.db === 'docker') {
-		uri = 'mongodb://' + process.env.DB_URL + ':27017/weskari';
+		uri = `mongodb://${process.env.DB_URL}:27017/${db_name}`;
 		options = {
 			useNewUrlParser: true
 		}
