@@ -2,6 +2,9 @@
 
 Weskari on Jyväskylän yliopiston Avoimen tiedon keskuksen kehittämä ohjelmisto kaukolainojen hallinnointiin. 
 
+
+![pääsivu](docs/main.png)
+
 Bugiraportteja otetaan vastaan githubin issueina: [creating issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/creating-an-issue)
 
 Avoimen tiedon keskus ei tarjoa käyttäjätukea, vaan ohjelmisto on käytettävissä sellaisenaan.
@@ -26,6 +29,12 @@ Voit kuitenkin testata toiminnallisuutta ajamalla seuraavan komennon weskari -ha
 
 ## lokaali kehittäminen ilman dockeria
 
+Hae koodit ja asenna riippuvuudet:
+
+    git clone https://github.com/OSC-JYU/weskari.git
+    cd weskari
+    npm install
+
 config.json -tiedostossa määritellään mongo-tietokantayhteys. Attribuutin "db" arvo määrää mitä yhteyttä käytetään.
 
 HUOM! Voidaan yliajaa ympäristömuuttujalla. kts. Makefile
@@ -48,11 +57,9 @@ HUOM! Voidaan yliajaa ympäristömuuttujalla. kts. Makefile
 	}
 
 
+Sitten käyntiin:
 
 
-    git clone https://github.com/OSC-JYU/weskari.git
-    cd weskari
-    npm install
     DEBUG=debug DEV=1 nodemon index.js
 
 
