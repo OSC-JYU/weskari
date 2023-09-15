@@ -1,7 +1,7 @@
 IMAGES := $(shell docker images -f "dangling=true" -q)
 CONTAINERS := $(shell docker ps -a -q -f status=exited)
 VOLUME := weskari-data
-VERSION := 1.2beta3
+VERSION := 1.2beta3_email_fix
 
 
 clean:
@@ -12,7 +12,7 @@ create_volume:
 	docker volume create $(VOLUME)
 
 build:
-	docker build -t osc.repo.kopla.jyu.fi/arihayri/weskari:$(VERSION) .
+	docker build -t osc/weskari:$(VERSION) .
 
 
 
@@ -21,17 +21,19 @@ start:
 		-v $(VOLUME):/logs \
 		-p 8080:8080 \
 		-e PORT=8080 \
-		-e DB=remote \
+		-e mailer="smtp" \
+		-e DB=docker \
 		-e DB_NAME="weskari" \
 		-e DB_USER="weskari_user" \
 		-e DB_PASSWORD="" \
-		-e DB_URL="" \
+		-e DB_URL="mongo_weskari" \
 		-e MS_CLIENT_ID="" \
 		-e MS_CLIENT_SECRET="" \
 		--network weskari-net \
 		--network-alias weskari \
 		--restart unless-stopped \
-		osc.repo.kopla.jyu.fi/arihayri/weskari:$(VERSION)
+		osc/weskari:$(VERSION)
+
 restart:
 	docker stop weskari-api
 	docker rm weskari-api

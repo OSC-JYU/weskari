@@ -889,6 +889,8 @@ async function loadConfig() {
 
 	if(process.env.DB) config.db = process.env.DB;
 	if(process.env.DB_NAME) db_name = process.env.DB_NAME;
+	if(process.env.MAILER) config.mailer = process.env.MAILER;
+	
 	var connection_string = ''
 	if(config.db === 'local') {
 		uri = `mongodb://127.0.0.1:27017/${db_name}`;
@@ -995,7 +997,7 @@ async function sendMail(email, subject, message, replyto) {
 		if(config.mailer === 'ms-graph') {
 			console.log('Sending mail via MS-graph')
 			await sendMSGraphMail(email, subject, message, replyto)
-		} else {
+		} else if(config.mailer === 'smtp') {
 			var address = email
 			if(Array.isArray(email)) address = email.join(', ')
 			try {
@@ -1011,6 +1013,8 @@ async function sendMail(email, subject, message, replyto) {
 				logger.error(e)
 				throw('Sähköpostin lähettäminen epäonnistui')
 			}
+		} else {
+			throw('Sähköpostiasetuksia ei ole määritelty!')
 		}
 	}
 }

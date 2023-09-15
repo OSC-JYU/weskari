@@ -1,9 +1,9 @@
 {
+	"db": "local",
+	"mailer": "smtp",
+	"smtp_from": "nobody@nogo.gom",
+
 	"users": [
 		"ari.hayrinen@jyu.fi"
-	],
-	"db": "local",
-	"mailer": "ms-graph"
+	]
 }
-
-
