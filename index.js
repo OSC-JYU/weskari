@@ -364,6 +364,27 @@ router.get('/api/pyynnot/overdue_loans', async function (ctx) {
 });
 
 
+router.get('/api/pyynnot/coming_overdue_loans', async function (ctx) {
+	const fields = {
+		teoksen_tiedot:1,
+		tilaaja: 1,
+		status: 1,
+		"tilaus_saatu.pvm_erapaiva": 1,
+		"tilaus_saatu.kirjaston_nimi": 1,
+		"tilaus_saatu.info": 1
+	}
+	var resp = await LoanRequest.find({
+		$and: [
+			{"tilaus_saatu.pvm_erapaiva": {$lte: new Date(new Date().setDate(new Date().getDate()+30))}},
+			{"tilaus_saatu.status": "lainassa"}
+		 ]
+	 }, fields).sort({"tilaus_saatu.pvm_erapaiva":1}).populate('tilaaja').exec();
+	ctx.body = resp
+});
+
+
+
+
 router.get('/api/pyynnot/loan_count', async function (ctx) {
 
 	const count = await LoanRequest.countDocuments({"status": "lainassa"}).exec();
@@ -472,6 +493,7 @@ router.post('/api/pyynnot/:id/karhu', async function (ctx) {
 
 router.get('/api/asiakkaat', async function (ctx) {
 	var q = createQuery(ctx)
+	console.log(q)
 	var p = await Client.find(q.query).sort(q.sort).exec()
 	ctx.body = p;
 });
@@ -531,6 +553,28 @@ router.put('/api/saatteet/:id', async function (ctx) {
 router.get('/api/asiakkaat/:id', async function (ctx) {
 	const client = await Client.findOne({_id: ctx.params.id}).exec();
 	ctx.body = client;
+});
+
+router.delete('/api/asiakkaat/:id', async function (ctx) {
+	const query = { tilaaja: ctx.params.id }
+	const requests = await LoanRequest.find(query).exec();
+	var active = requests.some(obj => obj.status === "lainassa" || obj.status === "tilattu" || obj.status === "kasittelyssa" || obj.status === "uusi");
+	if(!active) {
+		try {
+			const loans = await LoanRequest.find(query).remove().exec();
+			const client = await Client.deleteOne({_id: ctx.params.id}).exec();
+			ctx.body = client;
+		} catch (e) {
+			console.log(e.message)
+			ctx.status = 500
+			ctx.body = {error: e.message}
+		}
+
+	} else {
+		ctx.status = 409
+		ctx.body = {error: 'asiakkaalla on aktiivia lainoja/pyyntöjä'}
+	}
+
 });
 
 
@@ -804,7 +848,6 @@ router.put('/api/pyynnot/:pyynto/tilaukset/:id', async function (ctx) {
 
 router.post('/api/kirjastot', async function (ctx) {
 	const library = new Library(getBody(ctx.request.body));
-	///library._id = await createID('library')
 	let error = library.validateSync();
 	if(error) throw({message:'Tietojen validointi epäonnistui:' + error._message, status: 422})
 	var resp = await library.save()
@@ -1002,7 +1045,7 @@ async function sendMail(email, subject, message, replyto) {
 			if(Array.isArray(email)) address = email.join(', ')
 			try {
 				const mail = {
-					from: "nobody@jyu.fi",
+					from: config.smtp_from,
 					to: address,
 					subject: subject,
 					text: message

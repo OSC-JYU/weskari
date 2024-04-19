@@ -66,6 +66,10 @@ Sitten käyntiin:
 mene selaimella http://localhost:8103
 
 
+Jotta kokotekstihaut toimii, niin niiden indeksit pitää olla luotuna:
+
+https://www.mongodb.com/docs/manual/core/link-text-indexes/#std-label-text-search-on-premises
+
 ## config
  Config.json tiedoston *users* -kentässä määritellään sallitut käyttäjät. Käyttäjän lisäämisen jälkeen pitää kutsua config/reload enpointtia, jotta muutokset tulevat voimaan.
 
