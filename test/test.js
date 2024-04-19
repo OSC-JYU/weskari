@@ -19,6 +19,8 @@ var kirjasto_id = null
 var tilaus1_id = null
 var tilaus2_id = null
 
+var asiakas_1 = null
+
 chai.use(chaiHttp);
 
 
@@ -203,12 +205,12 @@ describe('Pyynnot', () => {
 				hankintaehdotus_vai_kaukolainapyynto: 'kaukolainapyyntö',
 				hintakatto: '6 €',
 				teos_on: 'kirja',
-				teoksen_tiedot: 'Lokaaliteos lainassa',
+				teoksen_tiedot: 'Lokaaliteos lainassa postitta',
 				huomautuksia: 'Googlella',
 				mista_loysit_julkaisun_tiedot: '',
 				maksaja: 'asiakas',
 				etunimi: 'Matti',
-				sukunimi: 'Myöhänen',
+				sukunimi: 'Mailiton',
 				kirjastokortin_numero: '',
 			};
 			chai.request(url)
@@ -347,6 +349,25 @@ describe('Asiakkaat', () => {
 				});
 		});
 	});
+
+	// describe('/POST asiakkaat', () => {
+	// 	it('hae asiakas Myöhänen', (done) => {
+	// 		let project = {
+	// 			sukunimi: 'Mocha',
+	// 			etunimi: 'Chai',
+	// 			sahkoposti: 'chai@mocha.com',
+	// 			huomio: 'testauksen testiasiakas',
+	// 			kirjastokortin_numero: '',
+	// 		};
+	// 		chai.request(url)
+	// 			.post('/asiakkaat=las')
+	// 			.send(project)
+	// 			.end((err, res) => {
+	// 				res.should.have.status(500);
+	// 				done();
+	// 			});
+	// 	});
+	// });
 
 });
 

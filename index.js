@@ -375,7 +375,7 @@ router.get('/api/pyynnot/coming_overdue_loans', async function (ctx) {
 	}
 	var resp = await LoanRequest.find({
 		$and: [
-			{"tilaus_saatu.pvm_erapaiva": {$lte: new Date(new Date().setDate(new Date().getDate()+30))}},
+			{"tilaus_saatu.pvm_erapaiva": {$gte: new Date(), $lte: new Date(new Date().setDate(new Date().getDate()+30))}},
 			{"tilaus_saatu.status": "lainassa"}
 		 ]
 	 }, fields).sort({"tilaus_saatu.pvm_erapaiva":1}).populate('tilaaja').exec();
@@ -619,7 +619,8 @@ router.get('/api/tilastot/:year', async function (ctx) {
 
 router.get('/api/kirjastot/:id', async function (ctx) {
 	const library = await Library.findOne({_id: ctx.params.id}).exec();
-	ctx.body = library;
+	if(!library) ctx.body = {no:1}
+	else ctx.body = library;
 });
 
 router.get('/api/kirjastot/:id/loans', async function (ctx) {
@@ -861,7 +862,29 @@ router.put('/api/kirjastot/:id', async function (ctx) {
 	ctx.body = resp
 });
 
+router.delete('/api/kirjastot/:id', async function (ctx) {
 
+	const query = { "tilaus_saatu.kirjasto_id": ctx.params.id }
+	var requests = await LoanRequest.find(query).exec()
+
+	var active = requests.some(obj => obj.status === "lainassa");
+	if(!active) {
+		try {
+			const loans = await LoanRequest.find(query).remove().exec();
+			const client = await Library.deleteOne({_id: ctx.params.id}).exec();
+			ctx.body = client;
+		} catch (e) {
+			console.log(e.message)
+			ctx.status = 500
+			ctx.body = {error: e.message}
+		}
+
+	} else {
+		ctx.status = 409
+		ctx.body = {error: 'kirjastolla on aktiivia lainoja/pyyntöjä'}
+	}
+
+});
 
 
 
