@@ -956,6 +956,11 @@ async function loadConfig() {
 	if(process.env.DB) config.db = process.env.DB;
 	if(process.env.DB_NAME) db_name = process.env.DB_NAME;
 	if(process.env.MAILER) config.mailer = process.env.MAILER;
+
+	// read users from env.USERS (list of comma separated mail addresses)
+	if(process.env.USERS) {
+		config.users = process.env.USERS.split(',');
+	}
 	
 	var connection_string = ''
 	if(config.db === 'local') {
